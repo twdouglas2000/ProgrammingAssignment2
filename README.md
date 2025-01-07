@@ -29,18 +29,20 @@ really a list containing a function to
 
 <!-- -->
 
-    makeVector <- function(x = numeric()) {
-            m <- NULL
+    makeVector <- function(x = numeric()) { #function begins with argument x defaulting to empty numeric function
+                                            #this function is just defining the functions get,set,getmean,setmean
+                                            #so that when they are used in relation with the makeVector function they yield the correct information
+            m <- NULL #begins with no value
             set <- function(y) {
-                    x <<- y
-                    m <<- NULL
+                    x <<- y   #assigns new value y to the vector x in the parent environment
+                    m <<- NULL  #resets the cached mean "m" to NULL for next vector in function
             }
-            get <- function() x
-            setmean <- function(mean) m <<- mean
-            getmean <- function() m
+            get <- function() x   #get function here simply returns the value of x
+            setmean <- function(mean) m <<- mean    #assigning mean to m using <<- ensures the cached mean persists outside the setmean()
+            getmean <- function() m   #get function returned. the value of m
             list(set = set, get = get,
-                 setmean = setmean,
-                 getmean = getmean)
+                 setmean = setmean,     #makes the defined functions set, get, setmean, and get mean
+                 getmean = getmean)     #accesiblt from outside the makeVector function
     }
 
 The following function calculates the mean of the special "vector"
@@ -50,16 +52,16 @@ cache and skips the computation. Otherwise, it calculates the mean of
 the data and sets the value of the mean in the cache via the `setmean`
 function.
 
-    cachemean <- function(x, ...) {
-            m <- x$getmean()
-            if(!is.null(m)) {
+    cachemean <- function(x, ...) {   #inputs value from makeVector function and ... to allow for further arguments in the mean function within the function
+            m <- x$getmean()    #calls getmean to snsure the mean has been calculated and cached, assigns NULL to "m" if not
+            if(!is.null(m)) {   #if 'm' is not NULL the mean is already cached 
                     message("getting cached data")
                     return(m)
             }
-            data <- x$get()
-            m <- mean(data, ...)
-            x$setmean(m)
-            m
+            data <- x$get()   #assigns vector to the variable data
+            m <- mean(data, ...)    #assigns the mean of the vector to m
+            x$setmean(m)    #called to store the calculated mean (m) in the cache for further use
+            m             #computed mean is returned
     }
 
 ### Assignment: Caching the Inverse of a Matrix
